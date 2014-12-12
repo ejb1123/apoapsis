@@ -1,3 +1,4 @@
+/*
 package info.robotbrain.apoapsis;
 
 public class ModCompatabilityException extends Exception
@@ -14,3 +15,4 @@ public class ModCompatabilityException extends Exception
     }
 
 }
+*/

@@ -7,7 +7,6 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.JdkFutureAdapters;
 import com.google.common.util.concurrent.ListenableFuture;
 import info.robotbrain.apoapsis.Server.Status;
-import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -102,7 +101,7 @@ public class ServerRun
                 ServerOrm.listeners.fire().state(run, run.status);
             }
         }
-    }/**, new OutputHandler()
+    }/*, new OutputHandler()
      {
      @Override public void processOutput(ServerRun run, String output)
      {
@@ -137,7 +136,7 @@ public class ServerRun
         Collections.addAll(this.args, args);
     }
 
-    public void installLibs(Library... libs) throws
+    /*public void installLibs(Library... libs) throws
             IOException
     {
         File libsDir = new File(getServer().location, "libraries");
@@ -153,7 +152,7 @@ public class ServerRun
                 FileUtils.copyURLToFile(lib.loc(), it);
             }
         }
-    }
+    }*/
 
     public ServerRun start()
     {

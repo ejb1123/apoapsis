@@ -1,3 +1,4 @@
+/*
 package info.robotbrain.apoapsis;
 
 import java.io.Serializable;
@@ -21,3 +22,4 @@ public abstract class Mod implements Serializable
 
     public abstract void install(ServerRun run) throws Exception;
 }
+*/

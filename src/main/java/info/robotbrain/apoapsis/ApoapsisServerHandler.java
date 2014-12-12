@@ -8,11 +8,7 @@ import info.robotbrain.apoapsis.ServerRun.Listener;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.ObjectInputStream;
-import java.util.Base64;
-import java.util.Objects;
 
 public class ApoapsisServerHandler extends ChannelHandlerAdapter
 {
@@ -147,7 +143,7 @@ public class ApoapsisServerHandler extends ChannelHandlerAdapter
                         ctx.writeAndFlush("rx:list:" + new Gson().toJson(currentServer.run().getPlayers()));
                         break;
                     case "servers":
-                        ctx.writeAndFlush("rx:list:" + new Gson().toJson(ServerOrm.uuids));
+                        ctx.writeAndFlush("rx:list:" + ServerOrm.listAsJson());
                         break;
                 }
                 break;
@@ -198,19 +194,20 @@ public class ApoapsisServerHandler extends ChannelHandlerAdapter
                 JsonParser parser = new JsonParser();
                 JsonObject obj = parser.parse(parts[1]).getAsJsonObject();
                 String loc = obj.get("location").getAsString();
+                String name = obj.get("name").getAsString();
                 JsonObject version = obj.getAsJsonObject("version");
                 String vName = version.get("name").getAsString();
                 String vBase = version.get("base").getAsString();
                 MCVersion ver = new MCVersion(vBase, vName);
                 File location = new File(loc);
                 location.mkdirs();
-                Server serv = new Server(ver, location);
+                Server serv = new Server(ver, location, name);
                 String uuid = ServerOrm.add(serv);
                 currentServer = serv;
                 ctx.writeAndFlush("rx:created:" + uuid);
                 break;
             }
-            case "addMod": {
+            /*case "addMod": {
                 if (currentServer == null) {
                     ctx.writeAndFlush("rx:err:noserverselected");
                     return;
@@ -239,7 +236,7 @@ public class ApoapsisServerHandler extends ChannelHandlerAdapter
                 }
                 String name = parts[1];
                 currentServer.getMods().removeIf(m -> Objects.equals(m.name, name));
-            }
+            }*/
             case "cmd": {
                 if (currentServer == null) {
                     ctx.writeAndFlush("rx:err:noserverselected");

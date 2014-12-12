@@ -1,5 +1,8 @@
 package info.robotbrain.apoapsis;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import info.robotbrain.apoapsis.Server.Status;
 import info.robotbrain.apoapsis.ServerRun.Listener;
 import org.apache.commons.lang3.event.EventListenerSupport;
@@ -81,5 +84,20 @@ public class ServerOrm
                 new FileOutputStream(file))) {
             out.writeObject(serv);
         }
+    }
+
+    public static String listAsJson()
+    {
+        Gson gson = new Gson();
+        JsonArray array = new JsonArray();
+        for (Server server : servers.values()) {
+            JsonObject obj = new JsonObject();
+            obj.addProperty("name", server.name);
+            obj.addProperty("uuid", server.uuid);
+            obj.addProperty("location", server.location.toString());
+            obj.add("version", gson.toJsonTree(server.version));
+            array.add(obj);
+        }
+        return array.toString();
     }
 }

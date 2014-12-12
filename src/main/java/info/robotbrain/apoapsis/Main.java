@@ -61,8 +61,6 @@ public class Main
             // Bind and start to accept incoming connections.
             ChannelFuture f = b.bind(port).sync();
 
-            //TODO: what goes here?!?!
-
             f.channel().closeFuture().sync();
         } finally {
             workerGroup.shutdownGracefully();
