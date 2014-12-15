@@ -18,6 +18,7 @@ import io.netty.handler.logging.LoggingHandler;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -29,7 +30,14 @@ public class Main
     {
         ServerOrm.init();
         Properties cfg = new Properties();
-        if (new File("apoapsis.properties").exists()) {
+        if (!new File("apoapsis.properties").exists()) {
+            cfg.setProperty("port", "25564");
+            cfg.setProperty("token", "UNDEFINED");
+            try (FileWriter writer = new FileWriter("apoapsis.properties")) {
+                cfg.store(writer,
+                        "Apoapsis Settings");
+            }
+        } else {
             cfg.load(new FileReader("apoapsis.properties"));
         }
         int port = Integer.parseInt(cfg.getProperty("port", "25564"));

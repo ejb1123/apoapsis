@@ -78,8 +78,10 @@ public class ServerOrm
 
     public static void save() throws IOException
     {
-        uuids.store(new FileWriter("servers.properties"),
-                "Apoapsis Server List");
+        try (FileWriter writer = new FileWriter("servers.properties")) {
+            uuids.store(writer,
+                    "Apoapsis Server List");
+        }
     }
 
     private static void writeServer(Server serv) throws IOException
