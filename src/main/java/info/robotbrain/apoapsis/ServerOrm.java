@@ -69,12 +69,17 @@ public class ServerOrm
     {
         UUID uuid = UUID.randomUUID();
         uuids.setProperty(uuid.toString(), serv.location.getAbsolutePath());
-        uuids.store(new FileWriter("servers.properties"),
-                "Apoapsis Server List");
+        save();
         servers.put(uuid, serv);
         serv.uuid = uuid.toString();
         writeServer(serv);
         return uuid.toString();
+    }
+
+    public static void save() throws IOException
+    {
+        uuids.store(new FileWriter("servers.properties"),
+                "Apoapsis Server List");
     }
 
     private static void writeServer(Server serv) throws IOException

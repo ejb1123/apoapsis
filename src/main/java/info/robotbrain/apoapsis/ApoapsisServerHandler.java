@@ -9,6 +9,7 @@ import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.io.File;
+import java.util.UUID;
 
 public class ApoapsisServerHandler extends ChannelHandlerAdapter
 {
@@ -236,6 +237,7 @@ public class ApoapsisServerHandler extends ChannelHandlerAdapter
                 }
                 String name = parts[1];
                 currentServer.getMods().removeIf(m -> Objects.equals(m.name, name));
+                break;
             }*/
             case "cmd": {
                 if (currentServer == null) {
@@ -247,6 +249,44 @@ public class ApoapsisServerHandler extends ChannelHandlerAdapter
                     return;
                 }
                 currentServer.run().getInput().println(parts[1]);
+                break;
+            }
+            case "changeversion": {
+                if (currentServer == null) {
+                    ctx.writeAndFlush("rx:err:noserverselected");
+                    return;
+                }
+                if (currentServer.run().getStatus() != Status.NotRunning) {
+                    ctx.writeAndFlush("rx:err:running");
+                    return;
+                }
+                JsonParser parser = new JsonParser();
+                JsonObject version = parser.parse(parts[1]).getAsJsonObject();
+                String vName = version.get("name").getAsString();
+                String vBase = version.get("base").getAsString();
+                MCVersion ver = new MCVersion(vBase, vName);
+                currentServer.version = ver;
+                ctx.writeAndFlush("rx:changeversion:" + ver.name);
+                break;
+            }
+            case "delete": {
+                if (currentServer == null) {
+                    ctx.writeAndFlush("rx:err:noserverselected");
+                    return;
+                }
+                if (currentServer.run().getStatus() != Status.NotRunning) {
+                    ctx.writeAndFlush("rx:err:running");
+                    return;
+                }
+                File file = new File(currentServer.location, "server.apo");
+                file.delete();
+                UUID uuid = UUID.fromString(currentServer.uuid);
+                ServerOrm.uuids.remove(currentServer.uuid);
+                ServerOrm.servers.remove(uuid);
+                ServerOrm.save();
+                currentServer = null;
+                ctx.writeAndFlush("rx:delete:ok");
+                break;
             }
         }
     }
