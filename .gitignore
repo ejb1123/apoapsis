@@ -13,3 +13,5 @@ out/
 gradle-app.setting
 
 
+gradle.properties
+!*.enc
