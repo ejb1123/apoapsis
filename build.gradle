@@ -30,8 +30,8 @@ artifacts {
 }
 
 bintray {
-    user = "${project.ext.bintray_user}"
-    key = "${project.ext.bintray_key}"
+    user = "${project.ext.properties.bintray_user}"
+    key = "${project.ext.properties.bintray_key}"
     configurations = ['archives']
     publish = true
     pkg {
