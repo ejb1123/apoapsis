@@ -3,6 +3,7 @@ package info.robotbrain.apoapsis;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import info.robotbrain.apoapsis.Server.Status;
 import info.robotbrain.apoapsis.ServerRun.Listener;
 import io.netty.channel.ChannelHandlerAdapter;
@@ -88,6 +89,12 @@ public class ApoapsisServerHandler extends ChannelHandlerAdapter
             {
                 ctx.writeAndFlush("status:" + run.getServer().uuid + ":" + status.toString().toLowerCase());
             }
+
+			@Override
+			public void serverMsg(ServerRun run, String message)
+			{
+				ctx.writeAndFlush("message:" + run.getServer().uuid + ":" + message);
+			}
         };
         ServerOrm.listeners.addListener(listener);
         super.channelActive(ctx);

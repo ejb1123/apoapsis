@@ -279,6 +279,8 @@ public class ServerRun
         public void started(ServerRun run, double time);
 
         public void exception(ServerRun run, Throwable throwable);
+        
+        public void serverMsg(ServerRun run, String message);
 
         public void state(ServerRun run, Status status);
     }
