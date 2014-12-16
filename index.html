@@ -78,15 +78,21 @@
                 </div>
                 <div class="modal-body">
                     <p>Please enter your token.</p>
-                    <div class="form-group">
-                        <label class="control-label" for="tokenInput">token</label>
-                        <input class="form-control" id="tokenInput" type="text">
-                        <label class="control-label" for="serverInput"type="text">Server</label>
-                        <input class="form-control" id="serverInput" type="text">
-                        <div class="progress progress-striped active">
-                        <div class="progress-bar" id="tokenModalProgressBar" style="width: 0%"></div>
-                        </div>
-                    </div> 
+                        
+                            <div class="form-group">
+                                <div class="tokenForm">
+                                    <label class="control-label" for="tokenInput">Token</label>
+                                    <input class="form-control" id="tokenInput" type="text">
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="serverInput"type="text">Server</label>
+                                    <input class="form-control" id="serverInput" type="text">
+                                </div>
+                                <div class="progress progress-striped active" id="tokenModalProgressBarDiv">
+                                    <div class="progress-bar" id="tokenModalProgressBar" style="width: 0%">
+                                    </div>
+                                </div>
+                            </div> 
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="tokenModalButton" class="btn btn-primary" onClick="connect();">Submit</button>
