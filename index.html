@@ -91,10 +91,11 @@
     $(function(){
         $('#tokenModal').modal('show');
         });
-        function connect(){
-            console.log("hello");
-            send(document.getElementById('inputDefault'));
-        }
+    function connect(){
+        console.log("hello");
+        //send(document.getElementById('inputDefault'));
+        $('#tokenModal').modal('hide');
+    }
         
     //TODO: make modal show on succesful socket connection.
     //TODO: make animation of submitig key in tokenModal
