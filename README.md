@@ -1,6 +1,8 @@
 apoapsis
 ========
 
+[![Build Status](https://travis-ci.org/robotbrain/apoapsis.svg?branch=master)](https://travis-ci.org/robotbrain/apoapsis)
+
 # Sample conversation:
 -> token:wrong_token
 <- rx:err:badtoken
