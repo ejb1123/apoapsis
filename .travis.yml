@@ -1,0 +1,12 @@
+language: java
+branches:
+    only:
+    - master
+jdk:
+- oraclejdk8
+script:
+- gradle build
+- gradle bintrayUpload
+before_install:
+- openssl aes-256-cbc -K $encrypted_72c58051a96a_key -iv $encrypted_72c58051a96a_iv
+  -in gradle.properties.enc -out gradle.properties -d
