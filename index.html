@@ -88,6 +88,12 @@
                                     <label class="control-label" for="serverInput"type="text">Server</label>
                                     <input class="form-control" id="serverInput" type="text">
                                 </div>
+                                <div class="form-group">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" id="secureConnectionCheckBox"> Secure connection
+                                        </label>
+                                    </div>
                                 <div class="progress progress-striped active" id="tokenModalProgressBarDiv">
                                     <div class="progress-bar" id="tokenModalProgressBar" style="width: 0%">
                                     </div>
@@ -107,7 +113,9 @@
     function connect(){
         console.log("hello");
         $('#tokenModalProgressBar').css('width','100%');
-        createSocket("ws://" + serverInput.value,"token:" + tokenInput.value);
+        protical = "ws://";
+        if($('#secureConnectionCheckBox').prop('checked'))protical="wss://";
+        createSocket(protical + serverInput.value,"token:" + tokenInput.value);
         //send(document.getElementById('inputDefault'));
         //$('#tokenModal').modal('hide');
     }
