@@ -7,7 +7,7 @@ function createSocket(url1,token){
     socket1.onmessage= function(event){
         console.log(event.data);
         switch(event.data) {
-            case"rx:ok:token":
+            case"rx:token":
                 $('#tokenModal').modal('hide');
                 $('#tokenModalProgressBarDiv').addClass('progress-bar-success');
                 $('#tokenModalProgressBar').removeClass('progress-bar-danger');
@@ -26,6 +26,9 @@ function createSocket(url1,token){
     }
     socket1.onopen = function(event){
         socket1.send(token);
+    }
+    socket1.onclose = function(event){
+        alert("opps it closed");    
     }
 }
 //var socket1 = new WebSocket("ws://127.0.0.1:25564/");
