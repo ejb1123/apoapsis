@@ -7,10 +7,12 @@ function createSocket(url1,token){
     socket1.onmessage= function(event){
         console.log(event.data);
         switch(event.data) {
-            case "rx:ok":
+            case"rx:ok:token":
                 $('#tokenModal').modal('hide');
                 $('#tokenModalProgressBarDiv').addClass('progress-bar-success');
                 $('#tokenModalProgressBar').removeClass('progress-bar-danger');
+                break;
+            case "rx:ok":
                 break;
             case "rx:err:badtoken":
                 $('.tokenForm').addClass('has-error');
