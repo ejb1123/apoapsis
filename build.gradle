@@ -10,7 +10,11 @@ apply plugin: 'application'
 mainClassName = 'info.robotbrain.apoapsis.Main'
 
 sourceCompatibility = 1.8
-version = '0.0.' + System.getenv('TRAVIS_BUILD_NUMBER')
+version = '0.0'
+if(System.getenv().CI) {
+    version += ".${System.getenv().TRAVIS_BUILD_NUMBER}"
+}
+
 group = 'info.robotbrain.apoapsis'
 jar {
     manifest {
