@@ -11,9 +11,10 @@ mainClassName = 'info.robotbrain.apoapsis.Main'
 
 sourceCompatibility = 1.8
 version = '1.0'
+group = 'info.robotbrain.apoapsis
 jar {
     manifest {
-        attributes 'Implementation-Title': 'Apoapsis', 'Implementation-Version': version
+        attributes 'Implementation-Title': 'Apoapsis', 'Implementation-Version': version, 'Main-Class': mainClassName
     }
 }
 
