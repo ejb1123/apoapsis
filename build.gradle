@@ -51,3 +51,7 @@ bintray {
         licenses = ['GPL-3.0']
     }
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.2.1'
+}
