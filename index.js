@@ -1,7 +1,6 @@
-function createSocket(url1,token){
-    url0 = "";
-    if(!url1.match(/:(\d){2,5}/g)){
-       url0 = url1.concat(":25564");
+function createSocket(url0,token){
+    if(!url0.match(/:(\d){2,5}/g)){
+       url0 = url0.concat(":25564");
     }
     var socket1 = new WebSocket(url0);
     socket1.onmessage= function(event){
