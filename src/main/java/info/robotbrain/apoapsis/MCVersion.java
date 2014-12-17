@@ -17,5 +17,4 @@ public class MCVersion implements Serializable
         this.downloadUrl = new URL(baseUrl + "/" + name + "/minecraft_server." + name + ".jar");
         this.name = name;
     }
-
 }

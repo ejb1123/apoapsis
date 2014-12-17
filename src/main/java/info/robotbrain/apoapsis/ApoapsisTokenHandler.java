@@ -1,9 +1,9 @@
 package info.robotbrain.apoapsis;
 
-import io.netty.channel.ChannelHandlerAdapter;
+import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 
-public class ApoapsisTokenHandler extends ChannelHandlerAdapter
+public class ApoapsisTokenHandler extends ChannelDuplexHandler
 {
 
     private String token;

@@ -1,4 +1,4 @@
-package info.robotbrain.apoapsis;
+/*package info.robotbrain.apoapsis;
 
 import java.io.Serializable;
 import java.net.MalformedURLException;
@@ -12,8 +12,7 @@ public final class Library implements Serializable
     public final String classifier;
     public final String repo;
 
-    public Library(String group, String name, String version,
-                   String classifier, String repo)
+    public Library(String group, String name, String version, String classifier, String repo)
     {
         this.group = group;
         this.name = name;
@@ -24,13 +23,11 @@ public final class Library implements Serializable
 
     public URL loc() throws MalformedURLException
     {
-        String it = repo + "/" + group.replace('.', '/') + "/" + name + "/"
-                + version + "/" + name + "-" + version;
+        String it = repo + "/" + group.replace('.', '/') + "/" + name + "/" + version + "/" + name + "-" + version;
         if (classifier != null && !"".equals(classifier)) {
             it += "-" + classifier;
         }
         it += ".jar";
         return new URL(it);
     }
-
-}
+}*/

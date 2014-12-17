@@ -3,16 +3,15 @@ package info.robotbrain.apoapsis;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
 import info.robotbrain.apoapsis.Server.Status;
 import info.robotbrain.apoapsis.ServerRun.Listener;
-import io.netty.channel.ChannelHandlerAdapter;
+import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.io.File;
 import java.util.UUID;
 
-public class ApoapsisServerHandler extends ChannelHandlerAdapter
+public class ApoapsisServerHandler extends ChannelDuplexHandler
 {
     public Listener listener;
     Server currentServer;
@@ -23,45 +22,34 @@ public class ApoapsisServerHandler extends ChannelHandlerAdapter
         System.out.println("Adding listener...");
         listener = new Listener()
         {
-
             @Override
             public void output(ServerRun run, String output)
             {
-                ctx.writeAndFlush("out:"
-                        + run.getServer().uuid + ":"
-                        + output);
+                ctx.writeAndFlush("out:" + run.getServer().uuid + ":" + output);
             }
 
             @Override
             public void error(ServerRun run, String output)
             {
-                ctx.writeAndFlush("err:"
-                        + run.getServer().uuid + ":"
-                        + output);
+                ctx.writeAndFlush("err:" + run.getServer().uuid + ":" + output);
             }
 
             @Override
             public void chat(ServerRun run, String player, String message)
             {
-                ctx.writeAndFlush("chat:"
-                        + run.getServer().uuid + ":"
-                        + player + ":" + message);
+                ctx.writeAndFlush("chat:" + run.getServer().uuid + ":" + player + ":" + message);
             }
 
             @Override
             public void joined(ServerRun run, String player)
             {
-                ctx.writeAndFlush("join:"
-                        + run.getServer().uuid + ":"
-                        + player);
+                ctx.writeAndFlush("join:" + run.getServer().uuid + ":" + player);
             }
 
             @Override
             public void left(ServerRun run, String player)
             {
-                ctx.writeAndFlush("part:"
-                        + run.getServer().uuid + ":"
-                        + player);
+                ctx.writeAndFlush("part:" + run.getServer().uuid + ":" + player);
             }
 
             @Override
@@ -90,14 +78,14 @@ public class ApoapsisServerHandler extends ChannelHandlerAdapter
                 ctx.writeAndFlush("status:" + run.getServer().uuid + ":" + status.toString().toLowerCase());
             }
 
-			@Override
-			public void serverMsg(ServerRun run, String message)
-			{
-				ctx.writeAndFlush("message:" + run.getServer().uuid + ":" + message);
-			}
+            @Override
+            public void serverMsg(ServerRun run, String message)
+            {
+                ctx.writeAndFlush("message:" + run.getServer().uuid + ":" + message);
+            }
         };
         ServerOrm.listeners.addListener(listener);
-        super.channelActive(ctx);
+        super.handlerAdded(ctx);
     }
 
     @Override
@@ -110,8 +98,7 @@ public class ApoapsisServerHandler extends ChannelHandlerAdapter
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg)
-            throws Exception
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception
     {
         String[] parts = ((String) msg).split(":", 2);
         String command = parts[0];
@@ -131,8 +118,7 @@ public class ApoapsisServerHandler extends ChannelHandlerAdapter
                     ctx.writeAndFlush("rx:err:noserverselected");
                     return;
                 }
-                ctx.writeAndFlush("rx:status:"
-                        + currentServer.run().getStatus().toString().toLowerCase());
+                ctx.writeAndFlush("rx:status:" + currentServer.run().getStatus().toString().toLowerCase());
                 break;
             }
             case "list": {
@@ -143,8 +129,7 @@ public class ApoapsisServerHandler extends ChannelHandlerAdapter
                             ctx.writeAndFlush("rx:err:noserverselected");
                             return;
                         }
-                        if (currentServer.run() == null
-                                || currentServer.run().getStatus() != Status.Running) {
+                        if (currentServer.run() == null || currentServer.run().getStatus() != Status.Running) {
                             ctx.writeAndFlush("rx:err:notrunning");
                             return;
                         }
@@ -214,38 +199,7 @@ public class ApoapsisServerHandler extends ChannelHandlerAdapter
                 currentServer = serv;
                 ctx.writeAndFlush("rx:created:" + uuid);
                 break;
-            }
-            /*case "addMod": {
-                if (currentServer == null) {
-                    ctx.writeAndFlush("rx:err:noserverselected");
-                    return;
-                }
-                if (currentServer.run().getStatus() != Status.NotRunning) {
-                    ctx.writeAndFlush("rx:err:running");
-                    return;
-                }
-                try (ObjectInputStream in = new ObjectInputStream(
-                        new ByteArrayInputStream(Base64.getDecoder().decode(
-                                parts[1])))) {
-                    Mod mod = (Mod) in.readObject();
-                    currentServer.getMods().add(mod);
-                }
-                ctx.writeAndFlush("rx:ok");
-                break;
-            }
-            case "remMod": {
-                if (currentServer == null) {
-                    ctx.writeAndFlush("rx:err:noserverselected");
-                    return;
-                }
-                if (currentServer.run().getStatus() != Status.NotRunning) {
-                    ctx.writeAndFlush("rx:err:running");
-                    return;
-                }
-                String name = parts[1];
-                currentServer.getMods().removeIf(m -> Objects.equals(m.name, name));
-                break;
-            }*/
+            }            /*case "addMod": {                if (currentServer == null) {                    ctx.writeAndFlush("rx:err:noserverselected");                    return;                }                if (currentServer.run().getStatus() != Status.NotRunning) {                    ctx.writeAndFlush("rx:err:running");                    return;                }                try (ObjectInputStream in = new ObjectInputStream(                        new ByteArrayInputStream(Base64.getDecoder().decode(                                parts[1])))) {                    Mod mod = (Mod) in.readObject();                    currentServer.getMods().add(mod);                }                ctx.writeAndFlush("rx:ok");                break;            }            case "remMod": {                if (currentServer == null) {                    ctx.writeAndFlush("rx:err:noserverselected");                    return;                }                if (currentServer.run().getStatus() != Status.NotRunning) {                    ctx.writeAndFlush("rx:err:running");                    return;                }                String name = parts[1];                currentServer.getMods().removeIf(m -> Objects.equals(m.name, name));                break;            }*/
             case "cmd": {
                 if (currentServer == null) {
                     ctx.writeAndFlush("rx:err:noserverselected");
@@ -299,8 +253,7 @@ public class ApoapsisServerHandler extends ChannelHandlerAdapter
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
-            throws Exception
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception
     {
         ctx.writeAndFlush("rx:ex:" + cause.getMessage());
         cause.printStackTrace();

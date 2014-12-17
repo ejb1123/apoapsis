@@ -11,70 +11,54 @@ import java.util.concurrent.Executors;
 
 public class Server implements Serializable
 {
-	private static final long serialVersionUID = 1L;
-	public final File location;
-	public final String name;
-	public transient String uuid;
-	public MCVersion version;
-	transient ExecutorService service = Executors.newSingleThreadExecutor();
-	transient ServerRun run;
+    private static final long serialVersionUID = 1L;
+    public final File location;
+    public final String name;
+    public transient String uuid;
+    public MCVersion version;
+    transient ExecutorService service = Executors.newSingleThreadExecutor();
+    transient ServerRun run;	/* private List<Mod> mods = new ArrayList<>();*/
 
-	// private List<Mod> mods = new ArrayList<>();
+    public Server(MCVersion version, File location, String name)
+    {
+        this.version = version;
+        this.location = location;
+        this.name = name;
+    }	/*	 * public List<Mod> getMods() { return mods; }	 */
 
-	public Server(MCVersion version, File location, String name)
-	{
-		this.version = version;
-		this.location = location;
-		this.name = name;
-	}
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public ServerRun run() throws Exception
+    {
+        if (this.run == null) {
+            run = new ServerRun(this);
+        }
+        if (run.getStatus() != Status.NotRunning) {
+            return run;
+        }
+        service.submit(() -> {
+            try {
+                installVersion();
+                new File(location, "mods").delete();
+                new File(location, "coremods").delete();
+                new File(location, "libraries").delete();				/*				 * for (Mod mod : mods) { if				 * (!mod.compatableMCVersions.contains(version)) { throw new				 * ModCompatabilityException(mod, version); } mod.install(run);				 * }				 */
+                ServerOrm.listeners.fire().serverMsg(run, "Initialized run");
+            } catch (Exception e) {
+                e.printStackTrace();
+                ServerOrm.listeners.fire().exception(run, e);
+            }
+        });
+        return run;
+    }
 
-	/*
-	 * public List<Mod> getMods() { return mods; }
-	 */
+    private void installVersion() throws IOException
+    {
+        File jar = new File(location, "minecraft-server.jar");
+        URL url = version.downloadUrl;
+        FileUtils.copyURLToFile(url, jar);
+    }
 
-	@SuppressWarnings("ResultOfMethodCallIgnored")
-	public ServerRun run() throws Exception
-	{
-		if (this.run == null) {
-			run = new ServerRun(this);
-		}
-		if (run.getStatus() != Status.NotRunning) {
-			return run;
-		}
-		service.submit(() ->
-		{
-			try {
-				installVersion();
-				new File(location, "mods").delete();
-				new File(location, "coremods").delete();
-				new File(location, "libraries").delete();
-				/*
-				 * for (Mod mod : mods) { if
-				 * (!mod.compatableMCVersions.contains(version)) { throw new
-				 * ModCompatabilityException(mod, version); } mod.install(run);
-				 * }
-				 */
-				ServerOrm.listeners.fire().serverMsg(run, "Initialized run");
-			} catch (Exception e) {
-				e.printStackTrace();
-				ServerOrm.listeners.fire().exception(run, e);				
-			}
-		});
-		return run;
-	}
-
-	private void installVersion() throws IOException
-	{
-		File jar = new File(location, "minecraft-server.jar");
-		URL url = version.downloadUrl;
-		FileUtils.copyURLToFile(url, jar);
-	}
-
-	public enum Status
-	{
-		NotRunning,
-		Init,
-		Running,
-		DeInit
-	}
+    public enum Status
+    {
+        NotRunning, Init, Running, DeInit
+    }
 }

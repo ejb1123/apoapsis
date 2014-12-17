@@ -20,7 +20,6 @@ import java.util.regex.Pattern;
 
 public class ServerRun
 {
-
     private final Server server;
     private final Set<String> players = Sets.newHashSet();
     public ListenableFuture<Boolean> future;
@@ -29,8 +28,7 @@ public class ServerRun
     private Server.Status status = Status.NotRunning;
     private static OutputHandler[] handlers = { new OutputHandler()
     {
-        final Pattern chat = Pattern
-                .compile("\\[\\d+:\\d+:\\d+] \\[Server thread/INFO\\]: <(?<player>[a-zA-Z0-9_-]+)> (?<text>.*)");
+        final Pattern chat = Pattern.compile("\\[\\d+:\\d+:\\d+] \\[Server thread/INFO\\]: <(?<player>[a-zA-Z0-9_-]+)> (?<text>.*)");
 
         @Override
         public void processOutput(ServerRun run, String output)
@@ -42,11 +40,9 @@ public class ServerRun
                 ServerOrm.listeners.fire().chat(run, player, text);
             }
         }
-
     }, new OutputHandler()
     {
-        final Pattern left = Pattern
-                .compile("\\[\\d+:\\d+:\\d+] \\[Server thread/INFO]: (?<player>[a-zA-Z0-9-_]+) left the game");
+        final Pattern left = Pattern.compile("\\[\\d+:\\d+:\\d+] \\[Server thread/INFO]: (?<player>[a-zA-Z0-9-_]+) left the game");
 
         @Override
         public void processOutput(ServerRun run, String output)
@@ -60,8 +56,7 @@ public class ServerRun
         }
     }, new OutputHandler()
     {
-        final Pattern left = Pattern
-                .compile("\\[\\d+:\\d+:\\d+] \\[Server thread/INFO]: (?<player>[a-zA-Z0-9-_]+) joined the game");
+        final Pattern left = Pattern.compile("\\[\\d+:\\d+:\\d+] \\[Server thread/INFO]: (?<player>[a-zA-Z0-9-_]+) joined the game");
 
         @Override
         public void processOutput(ServerRun run, String output)
@@ -101,18 +96,7 @@ public class ServerRun
                 ServerOrm.listeners.fire().state(run, run.status);
             }
         }
-    }/*, new OutputHandler()
-     {
-     @Override public void processOutput(ServerRun run, String output)
-     {
-     System.out.println(run.server.location + ": " + output);
-     }
-
-     @Override public void processError(ServerRun run, String output)
-     {
-     System.err.println(run.server.location + ": " + output);
-     }
-     }*/ };
+    }/*, new OutputHandler()     {     @Override public void processOutput(ServerRun run, String output)     {     System.out.println(run.server.location + ": " + output);     }     @Override public void processError(ServerRun run, String output)     {     System.err.println(run.server.location + ": " + output);     }     }*/ };
 
     public ServerRun(Server server)
     {
@@ -134,25 +118,7 @@ public class ServerRun
     public void addArgs(String... args)
     {
         Collections.addAll(this.args, args);
-    }
-
-    /*public void installLibs(Library... libs) throws
-            IOException
-    {
-        File libsDir = new File(getServer().location, "libraries");
-        for (Library lib : libs) {
-            File it = new File(libsDir, lib.group.replace('.', '/'));
-            it = new File(it, lib.name);
-            it = new File(it, lib.version);
-            //noinspection ResultOfMethodCallIgnored
-            it.mkdirs();
-            it = new File(it, lib.name + "-" + lib.version + "-"
-                    + lib.classifier + ".jar");
-            if (!it.exists()) {
-                FileUtils.copyURLToFile(lib.loc(), it);
-            }
-        }
-    }*/
+    }    /*public void installLibs(Library... libs) throws            IOException    {        File libsDir = new File(getServer().location, "libraries");        for (Library lib : libs) {            File it = new File(libsDir, lib.group.replace('.', '/'));            it = new File(it, lib.name);            it = new File(it, lib.version);            //noinspection ResultOfMethodCallIgnored            it.mkdirs();            it = new File(it, lib.name + "-" + lib.version + "-"                    + lib.classifier + ".jar");            if (!it.exists()) {                FileUtils.copyURLToFile(lib.loc(), it);            }        }    }*/
 
     public ServerRun start()
     {
@@ -222,8 +188,7 @@ public class ServerRun
     private void connect(Consumer<String> consumer, InputStream inputStream)
     {
         Runnable runnable = () -> {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    inputStream));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             while (true) {
                 String line;
                 try {
@@ -279,7 +244,7 @@ public class ServerRun
         public void started(ServerRun run, double time);
 
         public void exception(ServerRun run, Throwable throwable);
-        
+
         public void serverMsg(ServerRun run, String message);
 
         public void state(ServerRun run, Status status);
@@ -296,5 +261,4 @@ public class ServerRun
         {
         }
     }
-
 }
