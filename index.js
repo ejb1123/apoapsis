@@ -27,7 +27,7 @@ function createSocket(url0,token){
         socket1.send(token);
     }
     socket1.onclose = function(event){
-        alert("opps it closed");    
+        $('#tokenModal').modal('show');
     }
 }
 //var socket1 = new WebSocket("ws://127.0.0.1:25564/");
