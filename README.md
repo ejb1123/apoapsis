@@ -10,7 +10,7 @@ apoapsis
 
 -> token:right_token
 
-<- rx:ok
+<- rx:token
 
 
 
