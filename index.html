@@ -69,9 +69,67 @@
         </div>
     </div>
     <div class="container">
-        d
+        <div class="btn-toolbar">
+            <div class="btn-group">
+                <a onclick="$('#newServerModal').modal('show');" class="btn btn-default"><span class="glyphicon glyphicon-file"></span></a>
+            </div>
+        </div>
+        <table class="table table-striped table-hover ">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Column heading</th>
+                    <th>Column heading</th>
+                    <th>Column heading</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Column content</td>
+                    <td>Column content</td>
+                    <td>Column content</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Column content</td>
+                    <td>Column content</td>
+                    <td>Column content</td>
+                </tr>
+                <tr class="info">
+                    <td>3</td>
+                    <td>Column content</td>
+                    <td>Column content</td>
+                    <td>Column content</td>
+                </tr>
+                <tr class="success">
+                    <td>4</td>
+                    <td>Column content</td>
+                    <td>Column content</td>
+                    <td>Column content</td>
+                </tr>
+                <tr class="danger">
+                    <td>5</td>
+                    <td>Column content</td>
+                    <td>Column content</td>
+                    <td>Column content</td>
+                </tr>
+                <tr class="warning">
+                    <td>6</td>
+                    <td>Column content</td>
+                    <td>Column content</td>
+                    <td>Column content</td>
+                </tr>
+                <tr class="active">
+                    <td>7</td>
+                    <td>Column content</td>
+                    <td>Column content</td>
+                    <td>Column content</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-    <div id="tokenModal" class="modal" data-backdrop="static" data-keyboard="false">
+    <div id="tokenModal" class="modal fade" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -110,27 +168,55 @@
                 </div>
             </div>
         </div>
-        <script>
-            $(function () {
-                $('[data-toggle="tooltip"]').tooltip()
-                $('#tokenModal').modal('show');
-            });
+    </div>
+    <div id="newServerModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">New Server</h4>
+                </div>
+                <div class="modal-body">
 
-            function connect() {
-                //console.log("hello");
-                $('#tokenModalProgressBar').css('width', '100%');
-                protical = "ws://";
-                if ($('#secureConnectionCheckBox').prop('checked')) protical = "wss://";
-                createSocket(protical + serverInput.value, "token:" + tokenInput.value);
-            }
+                    <div class="form-group">
+                        <label for="serverName" class="control-label">Name</label>
+                        <input class="form-control" id="serverName" placeholder="Name of server" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label for="serverVersion" class="control-label">Version</label>
+                        <select class="form-control" id="serverVersion">
+                            <option>1.8.1</option>
+                            <option>1.8.0</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="newServer($('#serverName').val(),$('#serverVersion option:selected').text())" class="btn btn-primary">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+            $('#tokenModal').modal('show');
+        });
 
-            function changeLabel() {
-                if ($('#secureConnectionCheckBox').prop('checked')) $('#secureType').text("wss://");
-                if (!$('#secureConnectionCheckBox').prop('checked')) $('#secureType').text("ws://");
-            }
-             //TODO: make modal show on succesful socket connection.
-             //TODO: make animation of submitig key in tokenModal
-        </script>
+        function connect() {
+            //console.log("hello");
+            $('#tokenModalProgressBar').css('width', '100%');
+            protical = "ws://";
+            if ($('#secureConnectionCheckBox').prop('checked')) protical = "wss://";
+            createSocket(protical + serverInput.value, "token:" + tokenInput.value);
+        }
+
+        function changeLabel() {
+            if ($('#secureConnectionCheckBox').prop('checked')) $('#secureType').text("wss://");
+            if (!$('#secureConnectionCheckBox').prop('checked')) $('#secureType').text("ws://");
+        }
+         //TODO: make modal show on succesful socket connection.
+         //TODO: make animation of submitig key in tokenModal
+    </script>
 </body>
 
 </html>
