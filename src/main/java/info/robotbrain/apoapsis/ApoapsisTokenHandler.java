@@ -21,7 +21,7 @@ public class ApoapsisTokenHandler extends ChannelDuplexHandler
         String s = "token:" + token;
         System.out.println(s);
         if (s.equals(msg)) {
-            ctx.writeAndFlush("rx:token");
+            ctx.writeAndFlush("rx:token:ok");
             ctx.pipeline().replace(this, "apoapsis", new ApoapsisServerHandler());
             return;
         }

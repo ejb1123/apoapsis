@@ -110,7 +110,7 @@ public class ApoapsisServerHandler extends ChannelDuplexHandler
                 } catch (NoSuchServerException unused) {
                     ctx.writeAndFlush("rx:err:nosuchserver");
                 }
-                ctx.writeAndFlush("rx:ok");
+                ctx.writeAndFlush("rx:ok:select");
                 break;
             }
             case "status": {
@@ -133,10 +133,10 @@ public class ApoapsisServerHandler extends ChannelDuplexHandler
                             ctx.writeAndFlush("rx:err:notrunning");
                             return;
                         }
-                        ctx.writeAndFlush("rx:list:" + new Gson().toJson(currentServer.run().getPlayers()));
+                        ctx.writeAndFlush("rx:list-players:" + new Gson().toJson(currentServer.run().getPlayers()));
                         break;
                     case "servers":
-                        ctx.writeAndFlush("rx:list:" + ServerOrm.listAsJson());
+                        ctx.writeAndFlush("rx:list-servers:" + ServerOrm.listAsJson());
                         break;
                 }
                 break;
@@ -151,7 +151,7 @@ public class ApoapsisServerHandler extends ChannelDuplexHandler
                     return;
                 }
                 currentServer.run().stop();
-                ctx.writeAndFlush("rx:ok");
+                ctx.writeAndFlush("rx:ok:stop");
                 break;
             }
             case "start": {
@@ -164,7 +164,7 @@ public class ApoapsisServerHandler extends ChannelDuplexHandler
                     return;
                 }
                 currentServer.run().start();
-                ctx.writeAndFlush("rx:ok");
+                ctx.writeAndFlush("rx:ok:start");
                 break;
             }
             case "say": {
@@ -177,7 +177,7 @@ public class ApoapsisServerHandler extends ChannelDuplexHandler
                     return;
                 }
                 currentServer.run().say(parts[1]);
-                ctx.writeAndFlush("rx:ok");
+                ctx.writeAndFlush("rx:ok:say");
                 break;
             }
             case "create": {
@@ -210,6 +210,7 @@ public class ApoapsisServerHandler extends ChannelDuplexHandler
                     return;
                 }
                 currentServer.run().getInput().println(parts[1]);
+                ctx.writeAndFlush("rx:ok:cmd");
                 break;
             }
             case "changeversion": {
@@ -246,7 +247,7 @@ public class ApoapsisServerHandler extends ChannelDuplexHandler
                 ServerOrm.servers.remove(uuid);
                 ServerOrm.save();
                 currentServer = null;
-                ctx.writeAndFlush("rx:delete:ok");
+                ctx.writeAndFlush("rx:ok:delete");
                 break;
             }
         }

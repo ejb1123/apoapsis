@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.util.Properties;
 
@@ -35,6 +36,8 @@ public class Main
             cfg.setProperty("port", "25564");
             cfg.setProperty("token", "UNDEFINED");
             cfg.setProperty("ssl", "false");
+            cfg.setProperty("ssl.cert", "");
+            cfg.setProperty("ssl.pk", "");
             try (FileWriter writer = new FileWriter("apoapsis.properties")) {
                 cfg.store(writer, "Apoapsis Settings");
             }
@@ -42,24 +45,34 @@ public class Main
             cfg.load(new FileReader("apoapsis.properties"));
         }
         boolean ssl = "true".equals(cfg.getProperty("ssl", ""));
-        SslContext context = null;
+        final SslContext context;
         if (ssl) {
-            SelfSignedCertificate cert = new SelfSignedCertificate();
-            context = SslContext.newServerContext(cert.certificate(), cert.privateKey());
+        	File certFile;
+        	File pkFile;
+        	if(cfg.getProperty("ssl.cert", "") != "" && cfg.getProperty("ssl.pk", "") != "") {
+        		certFile = new File(cfg.getProperty("ssl.cert"));
+        		pkFile = new File(cfg.getProperty("ssl.pk"));
+        	} else {
+        		SelfSignedCertificate cert = new SelfSignedCertificate("robotbrain.info", new SecureRandom(), 2048);
+        		certFile=cert.certificate();
+        		pkFile = cert.privateKey();
+        	}
+            context = SslContext.newServerContext(certFile, pkFile);
+        } else {
+        	context = null;
         }
         int port = Integer.parseInt(cfg.getProperty("port", "25564"));
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
             ServerBootstrap b = new ServerBootstrap();
-            final SslContext tempContext = context;
             b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).handler(new LoggingHandler(LogLevel.INFO)).childHandler(new ChannelInitializer<SocketChannel>()
             {
                 @Override
                 public void initChannel(SocketChannel ch) throws Exception
                 {
                     if (ssl) {
-                        ch.pipeline().addLast("ssl", tempContext.newHandler(ch.alloc()));
+                        ch.pipeline().addLast("ssl", context.newHandler(ch.alloc()));
                     }
                     ch.pipeline().addLast(new HttpServerCodec());
                     ch.pipeline().addLast(new HttpObjectAggregator(65536));
