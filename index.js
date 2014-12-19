@@ -27,11 +27,17 @@ function createSocket(url0, token) {
             break;
         case "rx:created:" + eventArray[2]:
             alert(eventArray[2]);
-            $("#serverList").append("<tr " + "id='" + eventArray[2] + "'" + "><td>" + globalName + "</td><td>" + eventArray[2] + "</td><td id='serverStatus'>Not Started</td></tr>");
+            $("#serverList").append("<tr " + "id='" + eventArray[2] + "'" + "><td>" + globalName + "</td><td>" + eventArray[2] + "</td><td id='serverStatus'>Not in implamented yet</td></tr>");
+            $('#newServerModal').modal('hide');
+            $('#serverName').val("");
             break;
         case "rx:list-servers:[" + eventServersArray[1]: //case does not work. dont now how to detect the rx:list-serer:[] response
-            alert("hey");
-                servers= "[" + eventServersArray[1];
+            servers = JSON.parse("[" + eventServersArray[1]);
+            for (var server = 0; server < servers.length; server++) {
+                console.log(servers[server]);
+                $("#serverList").append("<tr " + "id='" + servers[server].uuid + "'" + "><td>" + servers[server].name + "</td><td>" + servers[server].uuid + "</td><td id='serverStatus'>" + "Not in implamented yet" + "</td></tr>");
+            }
+            break;
         default:
             break;
         }
@@ -41,6 +47,7 @@ function createSocket(url0, token) {
     }
     socket1.onclose = function (event) {
         $('#tokenModal').modal('show');
+        $('#serverList').empty();
     }
 }
 
