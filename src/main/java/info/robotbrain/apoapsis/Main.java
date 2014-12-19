@@ -49,14 +49,21 @@ public class Main
         if (ssl) {
         	File certFile;
         	File pkFile;
-        	if(cfg.getProperty("ssl.cert", "") != "" && cfg.getProperty("ssl.pk", "") != "") {
+        	if(!cfg.getProperty("ssl.cert", "").equals("") && !cfg.getProperty("ssl.pk", "").equals("")) {
         		certFile = new File(cfg.getProperty("ssl.cert"));
         		pkFile = new File(cfg.getProperty("ssl.pk"));
         	} else {
         		SelfSignedCertificate cert = new SelfSignedCertificate("robotbrain.info", new SecureRandom(), 2048);
-        		certFile=cert.certificate();
+        		certFile = cert.certificate();
         		pkFile = cert.privateKey();
         	}
+            if(cfg.getProperty("ssl.cert").equals("") && cfg.getProperty("ssl.pk").equals("")){
+                cfg.setProperty("ssl.cert",certFile.getPath());
+                cfg.setProperty("ssl.pk",pkFile.getPath());
+                try (FileWriter writer = new FileWriter("apoapsis.properties")) {
+                    cfg.store(writer, "Apoapsis Settings");
+                }
+            }
             context = SslContext.newServerContext(certFile, pkFile);
         } else {
         	context = null;
