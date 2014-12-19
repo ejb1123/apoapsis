@@ -7,13 +7,15 @@ function createSocket(url0, token) {
     }
     socket1 = new WebSocket(url0);
     socket1.onmessage = function (event) {
-        eventArray= event.data.split(":");
+        eventArray = event.data.split(":");
+        eventServersArray = event.data.split(":[");
         console.log(event.data);
         switch (event.data) {
         case "rx:token:ok":
             $('#tokenModal').modal('hide');
             $('#tokenModalProgressBarDiv').addClass('progress-bar-success');
             $('#tokenModalProgressBar').removeClass('progress-bar-danger');
+            send("list:servers");
             break;
         case "rx:ok:select":
             break;
@@ -25,7 +27,11 @@ function createSocket(url0, token) {
             break;
         case "rx:created:" + eventArray[2]:
             alert(eventArray[2]);
-            $("#serverList").append("<tr " + "id='" + eventArray[2] + "'" +"><td>" + globalName + "</td><td>" + eventArray[2] + "</td><td id='serverStatus'>Not Started</td></tr>");
+            $("#serverList").append("<tr " + "id='" + eventArray[2] + "'" + "><td>" + globalName + "</td><td>" + eventArray[2] + "</td><td id='serverStatus'>Not Started</td></tr>");
+            break;
+        case "rx:list-servers:[" + eventServersArray[1]: //case does not work. dont now how to detect the rx:list-serer:[] response
+            alert("hey");
+                servers= "[" + eventServersArray[1];
         default:
             break;
         }
