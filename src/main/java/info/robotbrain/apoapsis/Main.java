@@ -69,31 +69,13 @@ public class Main
         	context = null;
         }
         int port = Integer.parseInt(cfg.getProperty("port", "25564"));
-        EventLoopGroup bossGroup = new NioEventLoopGroup();
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+
         try {
-            ServerBootstrap b = new ServerBootstrap();
-            b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).handler(new LoggingHandler(LogLevel.INFO)).childHandler(new ChannelInitializer<SocketChannel>()
-            {
-                @Override
-                public void initChannel(SocketChannel ch) throws Exception
-                {
-                    if (ssl) {
-                        ch.pipeline().addLast("ssl", context.newHandler(ch.alloc()));
-                    }
-                    ch.pipeline().addLast(new HttpServerCodec());
-                    ch.pipeline().addLast(new HttpObjectAggregator(65536));
-                    ch.pipeline().addLast(new WebSocketServerProtocolHandler("/apoapsis"));
-                    ch.pipeline().addLast(new WebSocketFrameAggregator(65536));
-                    ch.pipeline().addLast(new TextWebSocketCodec());
-                    ch.pipeline().addLast("apoapsisauth", new ApoapsisTokenHandler(cfg.getProperty("token", "UNDEFINED")));
-                }
-            }).option(ChannelOption.SO_BACKLOG, 128).childOption(ChannelOption.SO_KEEPALIVE, true);
-            ChannelFuture f = b.bind(port).sync();
-            f.channel().closeFuture().sync();
+        	ServerBootstrap wsBootstrap = BootstrapHelper.createWebSocket(context, cfg.getProperty("token", "UNDEFINED"));
+        	ServerBootstrap tcpBootstrap = BootstrapHelper.createTcp(context, cfg.getProperty("token", "UNDEFINED"));
+        	//TODO: bind and sync
         } finally {
-            workerGroup.shutdownGracefully();
-            bossGroup.shutdownGracefully();
+        	BootstrapHelper.close();
         }
     }
 }
