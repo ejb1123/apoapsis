@@ -27,7 +27,7 @@ function createSocket(url0, token) {
             break;
         case "rx:created:" + eventArray[2]:
             alert(eventArray[2]);
-            $("#serverList").append("<tr " + "id='" + eventArray[2] + "'" + "><td>" + globalName + "</td><td>" + eventArray[2] + "</td><td id='serverStatus'>Not in implamented yet</td></tr>");
+            $("#serverList").append("<tr class = 'warning' id='" + eventArray[2] + "'" + "><td>" + globalName + "</td><td>" + eventArray[2] + "</td><td id='serverStatus'>Not in implamented yet</td></tr>");
             $('#newServerModal').modal('hide');
             $('#serverName').val("");
             break;
@@ -35,7 +35,22 @@ function createSocket(url0, token) {
             servers = JSON.parse("[" + eventServersArray[1]);
             for (var server = 0; server < servers.length; server++) {
                 console.log(servers[server]);
-                $("#serverList").append("<tr " + "id='" + servers[server].uuid + "'" + "><td>" + servers[server].name + "</td><td>" + servers[server].uuid + "</td><td id='serverStatus'>" + "Not in implamented yet" + "</td></tr>");
+                color = "";
+                switch (servers[server].status) {
+                case "NotRunning":
+                    color = "danger";
+                    break;
+                case "Init":
+                    color = "warning";
+                    break;
+                case "Running":
+                    color = "success";
+                    break;
+                case "DeInit":
+                    color = "warning";
+                    break;
+                }
+                $("#serverList").append("<tr class='" + color + "' id='" + servers[server].uuid + "'" + "><td>" + servers[server].name + "</td><td>" + servers[server].uuid + "</td><td id='serverStatus'>" + "Not in implamented yet" + "</td><td><span class='glyphicon glyphicon-off'></span>  <span class='glyphicon glyphicon-pencil'></span>      <span class='glyphicon glyphicon-cog'></span>  <span class='glyphicon glyphicon-trash'></span></td></tr>");
             }
             break;
         default:
