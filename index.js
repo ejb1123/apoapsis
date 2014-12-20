@@ -1,4 +1,4 @@
-var socket1
+var socket1;
 uuid = new RegExp("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
 
 function createSocket(url0, token) {
@@ -56,14 +56,14 @@ function createSocket(url0, token) {
         default:
             break;
         }
-    }
+    };
     socket1.onopen = function (event) {
         socket1.send(token);
-    }
+    };
     socket1.onclose = function (event) {
         $('#tokenModal').modal('show');
         $('#serverList').empty();
-    }
+    };
 }
 
 function newServer(name, version) {
