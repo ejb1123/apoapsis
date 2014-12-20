@@ -1,20 +1,10 @@
 package info.robotbrain.apoapsis;
 
-import info.robotbrain.apoapsis.internal.TextWebSocketCodec;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.HttpServerCodec;
-import io.netty.handler.codec.http.websocketx.WebSocketFrameAggregator;
-import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
+import io.netty.channel.ChannelPromise;
+import io.netty.channel.ChannelPromiseAggregator;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
 
@@ -68,12 +58,23 @@ public class Main
         } else {
         	context = null;
         }
-        int port = Integer.parseInt(cfg.getProperty("port", "25564"));
-
+        int wsPort = Integer.parseInt(cfg.getProperty("wsport", "25564"));
+        int tcpPort = Integer.parseInt(cfg.getProperty("tcp.port", "25563"));
         try {
         	ServerBootstrap wsBootstrap = BootstrapHelper.createWebSocket(context, cfg.getProperty("token", "UNDEFINED"));
         	ServerBootstrap tcpBootstrap = BootstrapHelper.createTcp(context, cfg.getProperty("token", "UNDEFINED"));
-        	//TODO: bind and sync
+
+            Channel wsChan = wsBootstrap.bind(wsPort).sync().channel();
+            ChannelFuture wsClose = wsChan.closeFuture();
+            Channel tcpChan = tcpBootstrap.bind(tcpPort).sync().channel();
+            ChannelFuture tcpClose = tcpChan.closeFuture();
+
+            ChannelPromise promise = wsChan.newPromise();
+            ChannelPromiseAggregator aggregator = new ChannelPromiseAggregator(promise);
+            wsClose.addListener(aggregator);
+            tcpClose.addListener(aggregator);
+            promise.sync();
+
         } finally {
         	BootstrapHelper.close();
         }

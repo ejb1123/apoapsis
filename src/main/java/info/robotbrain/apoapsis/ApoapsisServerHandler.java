@@ -97,6 +97,7 @@ public class ApoapsisServerHandler extends ChannelDuplexHandler
         }
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception
     {
