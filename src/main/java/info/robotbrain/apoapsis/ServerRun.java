@@ -9,6 +9,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import info.robotbrain.apoapsis.Server.Status;
 
 import java.io.*;
+import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -102,9 +103,23 @@ public class ServerRun
     {
         this.server = server;
         args = new ArrayList<>();
-        addArgs("java", "-jar", "minecraft-server.jar", "--nogui");
+        addArgs("java", "-jar", "minecraft-server.jar", "--nogui","--port", Integer.toString(getOpenPort(25564,25600)));
     }
+    public int getOpenPort(int min,int max)
+    {
+        for(int x = min;x<=max;x++){
+            try{
+                ServerSocket port = new ServerSocket(x);
+                port.close();
+                port=null;
+                return x;
+            } catch (IOException ex){
 
+            }
+
+        }
+        return 0;
+    }
     public Set<String> getPlayers()
     {
         return Collections.unmodifiableSet(players);
