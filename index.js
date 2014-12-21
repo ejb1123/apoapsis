@@ -55,6 +55,14 @@ function createSocket(url0, token) {
             break;
             case "status:" + eventArray[1] + ":" + eventArray[2]:
                 switch (eventArray[2]){
+                case "init":
+                    $('#' + eventArray[1]).removeClass();
+                    $('#' + eventArray[1]).addClass('warning');
+                    break;
+                case "deinit":
+                    $('#' + eventArray[1]).removeClass();
+                    $('#' + eventArray[1]).addClass('warning');
+                    break;
                 case "running":
                     $('#' + eventArray[1]).removeClass();
                     $('#' + eventArray[1]).addClass('success');
@@ -65,14 +73,14 @@ function createSocket(url0, token) {
                     break;
                 }
                 break;
-            case "message:" + eventArray[1] + ":" + eventArray[2]:
+           /* case "message:" + eventArray[1] + ":" + eventArray[2]:
                 switch (eventArray[2]){
                     case"Initialized run":
                         $('#' + eventArray[1]).removeClass();
                         $('#' + eventArray[1]).addClass('warning');
                         break;
                 }
-                break;
+                break;*/
         default:
             break;
         }
