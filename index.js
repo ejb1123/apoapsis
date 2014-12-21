@@ -27,7 +27,7 @@ function createSocket(url0, token) {
             break;
         case "rx:created:" + eventArray[2]:
             alert(eventArray[2]);
-            $("#serverList").append("<tr class = 'warning' id='" + eventArray[2] + "'" + "><td>" + globalName + "</td><td>" + eventArray[2] + "</td><td id='serverStatus'>Not in implamented yet</td></tr>");
+            $("#serverList").append("<tr class = 'warning' id='" + eventArray[2] + "'" + "><td>" + globalName + "</td><td>" + eventArray[2] + "</td><td id='serverStatus'>Not in implamented yet</td><td><span class='glyphicon glyphicon-off'></span>  <span class='glyphicon glyphicon-pencil'></span>      <span class='glyphicon glyphicon-cog'></span>  <span class='glyphicon glyphicon-trash'></span></td></tr>");
             $('#newServerModal').modal('hide');
             $('#serverName').val("");
             break;
@@ -73,7 +73,7 @@ function newServer(name, version) {
         name: name,
         version: {
             name: version,
-            base: "https:/\/\s3.amazonaws.com/Minecraft.Download/versions"
+            base: "https://s3.amazonaws.com/Minecraft.Download/versions"
         },
         location: "./test"
     }));
