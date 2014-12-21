@@ -23,7 +23,8 @@ public class Main
         ServerOrm.init();
         Properties cfg = new Properties();
         if (!new File("apoapsis.properties").exists()) {
-            cfg.setProperty("port", "25564");
+            cfg.setProperty("ws.port", "25564");
+            cfg.setProperty("tcp.port", "25563");
             cfg.setProperty("token", "UNDEFINED");
             cfg.setProperty("ssl", "false");
             cfg.setProperty("ssl.cert", "");
@@ -37,32 +38,32 @@ public class Main
         boolean ssl = "true".equals(cfg.getProperty("ssl", ""));
         final SslContext context;
         if (ssl) {
-        	File certFile;
-        	File pkFile;
-        	if(!cfg.getProperty("ssl.cert", "").equals("") && !cfg.getProperty("ssl.pk", "").equals("")) {
-        		certFile = new File(cfg.getProperty("ssl.cert"));
-        		pkFile = new File(cfg.getProperty("ssl.pk"));
-        	} else {
-        		SelfSignedCertificate cert = new SelfSignedCertificate("robotbrain.info", new SecureRandom(), 2048);
-        		certFile = cert.certificate();
-        		pkFile = cert.privateKey();
-        	}
-            if(cfg.getProperty("ssl.cert").equals("") && cfg.getProperty("ssl.pk").equals("")){
-                cfg.setProperty("ssl.cert",certFile.getPath());
-                cfg.setProperty("ssl.pk",pkFile.getPath());
+            File certFile;
+            File pkFile;
+            if (!cfg.getProperty("ssl.cert", "").equals("") && !cfg.getProperty("ssl.pk", "").equals("")) {
+                certFile = new File(cfg.getProperty("ssl.cert"));
+                pkFile = new File(cfg.getProperty("ssl.pk"));
+            } else {
+                SelfSignedCertificate cert = new SelfSignedCertificate("robotbrain.info", new SecureRandom(), 2048);
+                certFile = cert.certificate();
+                pkFile = cert.privateKey();
+            }
+            if (cfg.getProperty("ssl.cert").equals("") && cfg.getProperty("ssl.pk").equals("")) {
+                cfg.setProperty("ssl.cert", certFile.getPath());
+                cfg.setProperty("ssl.pk", pkFile.getPath());
                 try (FileWriter writer = new FileWriter("apoapsis.properties")) {
                     cfg.store(writer, "Apoapsis Settings");
                 }
             }
             context = SslContext.newServerContext(certFile, pkFile);
         } else {
-        	context = null;
+            context = null;
         }
-        int wsPort = Integer.parseInt(cfg.getProperty("wsport", "25564"));
+        int wsPort = Integer.parseInt(cfg.getProperty("ws.port", "25564"));
         int tcpPort = Integer.parseInt(cfg.getProperty("tcp.port", "25563"));
         try {
-        	ServerBootstrap wsBootstrap = BootstrapHelper.createWebSocket(context, cfg.getProperty("token", "UNDEFINED"));
-        	ServerBootstrap tcpBootstrap = BootstrapHelper.createTcp(context, cfg.getProperty("token", "UNDEFINED"));
+            ServerBootstrap wsBootstrap = BootstrapHelper.createWebSocket(context, cfg.getProperty("token", "UNDEFINED"));
+            ServerBootstrap tcpBootstrap = BootstrapHelper.createTcp(context, cfg.getProperty("token", "UNDEFINED"));
 
             Channel wsChan = wsBootstrap.bind(wsPort).sync().channel();
             ChannelFuture wsClose = wsChan.closeFuture();
@@ -76,7 +77,7 @@ public class Main
             promise.sync();
 
         } finally {
-        	BootstrapHelper.close();
+            BootstrapHelper.close();
         }
     }
 }
