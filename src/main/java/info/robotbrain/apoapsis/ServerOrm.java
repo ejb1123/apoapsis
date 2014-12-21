@@ -102,6 +102,7 @@ public class ServerOrm
             obj.addProperty("name", server.name);
             obj.addProperty("uuid", server.uuid);
             obj.addProperty("location", server.location.toString());
+            obj.addProperty("status", server.run != null ? server.run.getStatus().toString().toLowerCase() : "notrunning");
             obj.add("version", gson.toJsonTree(server.version));
             array.add(obj);
         }
