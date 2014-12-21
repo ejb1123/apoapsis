@@ -1,10 +1,7 @@
 package info.robotbrain.apoapsis;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelPromise;
-import io.netty.channel.ChannelPromiseAggregator;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
 
@@ -65,16 +62,11 @@ public class Main
             ServerBootstrap wsBootstrap = BootstrapHelper.createWebSocket(context, cfg.getProperty("token", "UNDEFINED"));
             ServerBootstrap tcpBootstrap = BootstrapHelper.createTcp(context, cfg.getProperty("token", "UNDEFINED"));
 
-            Channel wsChan = wsBootstrap.bind(wsPort).sync().channel();
-            ChannelFuture wsClose = wsChan.closeFuture();
-            Channel tcpChan = tcpBootstrap.bind(tcpPort).sync().channel();
-            ChannelFuture tcpClose = tcpChan.closeFuture();
+            ChannelFuture wsClose = wsBootstrap.bind(wsPort).sync().channel().closeFuture();
+            ChannelFuture tcpClose = tcpBootstrap.bind(tcpPort).sync().channel().closeFuture();
 
-            ChannelPromise promise = wsChan.newPromise();
-            ChannelPromiseAggregator aggregator = new ChannelPromiseAggregator(promise);
-            wsClose.addListener(aggregator);
-            tcpClose.addListener(aggregator);
-            promise.sync();
+            wsClose.sync();
+            tcpClose.sync();
 
         } finally {
             BootstrapHelper.close();
