@@ -27,7 +27,7 @@ function createSocket(url0, token) {
             break;
         case "rx:created:" + eventArray[2]:
             alert(eventArray[2]);
-            $("#serverList").append("<tr class = 'warning' id='" + eventArray[2] + "'" + "><td>" + globalName + "</td><td>" + eventArray[2] + "</td><td id='serverStatus'>Not in implamented yet</td><td><span class='glyphicon glyphicon-off'></span>  <span class='glyphicon glyphicon-pencil'></span>      <span class='glyphicon glyphicon-cog'></span>  <span class='glyphicon glyphicon-trash'></span></td></tr>");
+            $("#serverList").append("<tr class = 'danger' id='" + eventArray[2] + "'" + "><td>" + globalName + "</td><td>" + eventArray[2] + "</td><td id='serverStatus'>Not in implamented yet</td><td><span class='glyphicon glyphicon-off'></span>  <span class='glyphicon glyphicon-pencil'></span>      <span class='glyphicon glyphicon-cog'></span>  <span class='glyphicon glyphicon-trash'></span></td></tr>");
             $('#newServerModal').modal('hide');
             $('#serverName').val("");
             break;
@@ -50,9 +50,29 @@ function createSocket(url0, token) {
                     color = "warning";
                     break;
                 }
-                $("#serverList").append("<tr class='" + color + "' id='" + servers[server].uuid + "'" + "><td>" + servers[server].name + "</td><td>" + servers[server].uuid + "</td><td id='serverStatus'>" + "Not in implamented yet" + "</td><td><span class='glyphicon glyphicon-off'></span>  <span class='glyphicon glyphicon-pencil'></span>      <span class='glyphicon glyphicon-cog'></span>  <span class='glyphicon glyphicon-trash'></span></td></tr>");
+                $("#serverList").append("<tr class='" + color + "' id='" + servers[server].uuid + "'" + "><td>" + servers[server].name + "</td><td>" + servers[server].uuid + "</td><td id='serverStatus'>" + "Not in implamented yet" + '</td><td><a href="javascript:startServer(\'' + servers[server].uuid  +  "\');\"><span class='glyphicon glyphicon-off'></span></a>  <span class='glyphicon glyphicon-pencil'></span>      <span class='glyphicon glyphicon-cog'></span>  <span class='glyphicon glyphicon-trash'></span></td></tr>");
             }
             break;
+            case "status:" + eventArray[1] + ":" + eventArray[2]:
+                switch (eventArray[2]){
+                case "running":
+                    $('#' + eventArray[1]).removeClass();
+                    $('#' + eventArray[1]).addClass('success');
+                    break;
+                case "notrunning":
+                    $('#' + eventArray[1]).removeClass();
+                    $('#' + eventArray[1]).addClass('danger');
+                    break;
+                }
+                break;
+            case "message:" + eventArray[1] + ":" + eventArray[2]:
+                switch (eventArray[2]){
+                    case"Initialized run":
+                        $('#' + eventArray[1]).removeClass();
+                        $('#' + eventArray[1]).addClass('warning');
+                        break;
+                }
+                break;
         default:
             break;
         }
@@ -80,6 +100,16 @@ function newServer(name, version) {
 }
 //var socket1 = new WebSocket("ws://127.0.0.1:25564/");
 
+function startServer(uuid){
+    if($('#' + uuid).hasClass("danger")){
+        socket1.send("select:"+uuid);
+        socket1.send("start");
+    }
+    else if($('#' + uuid).hasClass("success")){
+        socket1.send("select:"+uuid);
+        socket1.send("stop");
+    }
+}
 
 function send(hh) {
     socket1.send(hh);
