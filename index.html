@@ -71,7 +71,7 @@
     <div class="container">
         <div class="btn-toolbar">
             <div class="btn-group">
-                <a onclick="$('#newServerModal').modal('show');" class="btn btn-default"><span class="glyphicon glyphicon-file"></span></a>
+                <a onclick="$('#newServerModal').modal('show');" class="btn btn-default"><span class="glyphicon glyphicon-file"></span></a><a class="btn btn-default" href="javascript:socket1.send('list:servers');"><span class="glyphicon glyphicon-refresh"></span></a>
             </div>
         </div>
         <table id="serverTable"class="table table-striped table-hover ">
