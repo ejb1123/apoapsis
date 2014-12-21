@@ -2,6 +2,7 @@ apoapsis
 ========
 
 [![Build Status](https://travis-ci.org/robotbrain/apoapsis.svg?branch=master)](https://travis-ci.org/robotbrain/apoapsis)
+[![Download](https://api.bintray.com/packages/robotbrain/maven/apoapsis/images/download.svg) ](https://bintray.com/robotbrain/maven/apoapsis/_latestVersion)
 
 # Sample conversation:
 -> token:wrong_token
