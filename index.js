@@ -32,6 +32,7 @@ function createSocket(url0, token) {
             $('#serverName').val("");
             break;
         case "rx:list-servers:[" + eventServersArray[1]: //case does not work. dont now how to detect the rx:list-serer:[] response
+            $('#serverList').empty();
             servers = JSON.parse("[" + eventServersArray[1]);
             for (var server = 0; server < servers.length; server++) {
                 console.log(servers[server]);
@@ -55,7 +56,7 @@ function createSocket(url0, token) {
                     status = "Deinitializing";
                     break;
                 }
-                $("#serverList").append("<tr class='" + color + "' id='" + servers[server].uuid + "'" + "><td>" + servers[server].name + "</td><td>" + servers[server].uuid + "</td><td id='serverStatus'>" + status + '</td><td><a href="javascript:startServer(\'' + servers[server].uuid  +  "\');\"><span class='glyphicon glyphicon-off'></span></a>  <span class='glyphicon glyphicon-pencil'></span>      <span class='glyphicon glyphicon-cog'></span>  <span class='glyphicon glyphicon-trash'></span></td></tr>");
+                $("#serverList").append("<tr class='" + color + "' id='" + servers[server].uuid + "'" + "><td>" + servers[server].name + "</td><td>" + servers[server].uuid + "</td><td id='serverStatus'>" + status + '</td><td><a href="javascript:startServer(\'' + servers[server].uuid  +  "\');\"><span class='glyphicon glyphicon-off'></span></a>  <span class='glyphicon glyphicon-pencil'></span>      <span class='glyphicon glyphicon-cog'></span>  <a href=\"javascript:deleteServer(\'"+ servers[server].uuid+"\');\"><span class='glyphicon glyphicon-trash'></span></a></td></tr>");
             }
             break;
             case "status:" + eventArray[1] + ":" + eventArray[2]:
@@ -127,7 +128,16 @@ function startServer(uuid){
         socket1.send("stop");
     }
 }
-
+function deleteServer(uuid){
+    if($('#' + uuid).hasClass("danger")){
+        socket1.send("select:"+uuid);
+        socket1.send("delete");
+        socket1.send("list:servers");
+    }
+    else if($('#' + uuid).hasClass("success")){
+        alert("Please stop the server");
+    }
+}
 function send(hh) {
     socket1.send(hh);
 }
