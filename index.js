@@ -103,7 +103,7 @@ function newServer(name, version) {
             name: version,
             base: "https://s3.amazonaws.com/Minecraft.Download/versions"
         },
-        location: "./test"
+        location: "./Servers/"+name
     }));
 }
 //var socket1 = new WebSocket("ws://127.0.0.1:25564/");
