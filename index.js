@@ -36,21 +36,26 @@ function createSocket(url0, token) {
             for (var server = 0; server < servers.length; server++) {
                 console.log(servers[server]);
                 color = "";
+                status="";
                 switch (servers[server].status) {
-                case "NotRunning":
+                case "notrunning":
                     color = "danger";
+                    status ="Not running";
                     break;
-                case "Init":
+                case "init":
                     color = "warning";
+                    status ="Initializing";
                     break;
-                case "Running":
+                case "running":
                     color = "success";
+                    status ="Running";
                     break;
-                case "DeInit":
+                case "deinit":
                     color = "warning";
+                    status = "Deinitializing";
                     break;
                 }
-                $("#serverList").append("<tr class='" + color + "' id='" + servers[server].uuid + "'" + "><td>" + servers[server].name + "</td><td>" + servers[server].uuid + "</td><td id='serverStatus'>" + "Not in implamented yet" + '</td><td><a href="javascript:startServer(\'' + servers[server].uuid  +  "\');\"><span class='glyphicon glyphicon-off'></span></a>  <span class='glyphicon glyphicon-pencil'></span>      <span class='glyphicon glyphicon-cog'></span>  <span class='glyphicon glyphicon-trash'></span></td></tr>");
+                $("#serverList").append("<tr class='" + color + "' id='" + servers[server].uuid + "'" + "><td>" + servers[server].name + "</td><td>" + servers[server].uuid + "</td><td id='serverStatus'>" + status + '</td><td><a href="javascript:startServer(\'' + servers[server].uuid  +  "\');\"><span class='glyphicon glyphicon-off'></span></a>  <span class='glyphicon glyphicon-pencil'></span>      <span class='glyphicon glyphicon-cog'></span>  <span class='glyphicon glyphicon-trash'></span></td></tr>");
             }
             break;
             case "status:" + eventArray[1] + ":" + eventArray[2]:
@@ -58,18 +63,22 @@ function createSocket(url0, token) {
                 case "init":
                     $('#' + eventArray[1]).removeClass();
                     $('#' + eventArray[1]).addClass('warning');
+                    $('#' + eventArray[1]).find("#serverStatus").text("Initializing");
                     break;
                 case "deinit":
                     $('#' + eventArray[1]).removeClass();
                     $('#' + eventArray[1]).addClass('warning');
+                    $('#' + eventArray[1]).find("#serverStatus").text("Deinitializing");
                     break;
                 case "running":
                     $('#' + eventArray[1]).removeClass();
                     $('#' + eventArray[1]).addClass('success');
+                    $('#' + eventArray[1]).find("#serverStatus").text("Running");
                     break;
                 case "notrunning":
                     $('#' + eventArray[1]).removeClass();
                     $('#' + eventArray[1]).addClass('danger');
+                    $('#' + eventArray[1]).find("#serverStatus").text("Stopped");
                     break;
                 }
                 break;
