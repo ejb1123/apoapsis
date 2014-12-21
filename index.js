@@ -27,7 +27,7 @@ function createSocket(url0, token) {
             break;
         case "rx:created:" + eventArray[2]:
             alert(eventArray[2]);
-            $("#serverList").append("<tr class = 'danger' id='" + eventArray[2] + "'" + "><td>" + globalName + "</td><td>" + eventArray[2] + "</td><td id='serverStatus'>Not in implamented yet</td><td><span class='glyphicon glyphicon-off'></span>  <span class='glyphicon glyphicon-pencil'></span>      <span class='glyphicon glyphicon-cog'></span>  <span class='glyphicon glyphicon-trash'></span></td></tr>");
+            $("#serverList").append("<tr class='" + color + "' id='" + servers[server].uuid + "'" + "><td>" + servers[server].name + "</td><td>" + servers[server].uuid + "</td><td id='serverStatus'>" + "Not in implamented yet" + '</td><td><a href="javascript:startServer(\'' + servers[server].uuid  +  "\');\"><span class='glyphicon glyphicon-off'></span></a>  <span class='glyphicon glyphicon-pencil'></span>      <span class='glyphicon glyphicon-cog'></span>  <span class='glyphicon glyphicon-trash'></span></td></tr>");
             $('#newServerModal').modal('hide');
             $('#serverName').val("");
             break;
